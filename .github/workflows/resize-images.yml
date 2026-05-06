@@ -1,0 +1,30 @@
+name: Resize Poster Image
+
+on:
+  push:
+    paths:
+      - "poster.jpg"
+
+jobs:
+  resize-and-optimize:
+    runs-on: ubuntu-latest
+
+    # do not run when workflow commits files
+    if: github.actor != 'github-actions[bot]'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Generate Variants
+        run: |
+          # Create WebP versions for faster loading
+          convert poster.jpg -quality 75 -resize 600x poster-small.webp
+          convert poster.jpg -quality 75 -resize 1200x poster-medium.webp
+
+          ls -lh poster*
+
+      - name: Push Changes
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: "chore: update responsive images [skip ci]"
+          file_pattern: "poster*.webp"
