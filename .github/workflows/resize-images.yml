@@ -24,7 +24,7 @@ jobs:
         run: |
 
           # get new poster file
-          NEW_POSTER =$(ls -t poster.* | head -1)
+          NEW_POSTER=$(ls -t poster.* | head -1)
 
           # remove old poster file if new has different extension
           # for example, previously we had poster.jpg and now we have poster.png
