@@ -23,6 +23,7 @@ jobs:
       - name: Generate Variants
         run: |
           # Create WebP versions for faster loading
+          convert poster.* -quality 90 poster.webp
           convert poster.* -quality 90 -resize 375x poster-xs.webp
           convert poster.* -quality 90 -resize 768x poster-sm.webp
           convert poster.* -quality 90 -resize 1024x poster-md.webp
