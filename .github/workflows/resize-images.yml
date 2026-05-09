@@ -23,10 +23,11 @@ jobs:
       - name: Generate Variants
         run: |
           # Create WebP versions for faster loading
-          convert poster.jpg -quality 75 -resize 600x poster-small.webp
-          convert poster.jpg -quality 75 -resize 1200x poster-medium.webp
-
-          ls -lh poster*
+          convert poster.* -quality 90 -resize 375x poster-xs.webp
+          convert poster.* -quality 90 -resize 768x poster-sm.webp
+          convert poster.* -quality 90 -resize 1024x poster-md.webp
+          convert poster.* -quality 90 -resize 1440x poster-lg.webp
+          convert poster.* -quality 90 -resize 1920x poster-xl.webp
 
       - name: Push Changes
         uses: stefanzweifel/git-auto-commit-action@v7
