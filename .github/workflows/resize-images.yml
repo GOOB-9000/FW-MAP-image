@@ -7,15 +7,16 @@ on:
 
 jobs:
   resize-and-optimize:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
 
     # do not run when workflow commits files
     if: github.actor != 'github-actions[bot]'
     steps:
-
       - name: Install ImageMagick
         run: sudo apt-get update && sudo apt-get install -y imagemagick
-    
+
       - name: Checkout
         uses: actions/checkout@v6
 
