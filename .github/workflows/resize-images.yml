@@ -47,4 +47,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "chore: update responsive images [skip ci]"
-          file_pattern: "poster*. assets/poster*.webp "
+          file_pattern: "poster.* assets/poster*.webp"
