@@ -3,12 +3,12 @@ name: Resize Poster Image
 on:
   push:
     paths:
-      - "poster.jpg"
+      - "poster.*" # matches any kind of image
 
 jobs:
   resize-and-optimize:
     permissions:
-      contents: write
+      contents: write # allows commiting files from workflow
     runs-on: ubuntu-latest
 
     # do not run when workflow commits files
@@ -22,16 +22,29 @@ jobs:
 
       - name: Generate Variants
         run: |
-          # Create WebP versions for faster loading
-          convert poster.* -quality 90 poster.webp
-          convert poster.* -quality 90 -resize 375x poster-xs.webp
-          convert poster.* -quality 90 -resize 768x poster-sm.webp
-          convert poster.* -quality 90 -resize 1024x poster-md.webp
-          convert poster.* -quality 90 -resize 1440x poster-lg.webp
-          convert poster.* -quality 90 -resize 1920x poster-xl.webp
+
+          # get new poster file
+          NEW_POSTER =$(ls -t poster.* | head -1)
+
+          # remove old poster file if new has different extension
+          # for example, previously we had poster.jpg and now we have poster.png
+          find . -maxdepth 1 -name "poster.*" ! -name "$NEW_POSTER" -delete
+
+          # clear and re-create assets dir
+          mkdir -p assets
+          rm -f assets/poster*.webp
+
+          # Create WebP versions for faster loading using imagemagick
+          # and store them in the assets dir
+          convert "$NEW_POSTER" -strip -quality 90 assets/poster.webp
+          convert "$NEW_POSTER" -strip -quality 90 -resize 375x assets/poster-xs.webp
+          convert "$NEW_POSTER" -strip -quality 90 -resize 768x assets/poster-sm.webp
+          convert "$NEW_POSTER" -strip -quality 90 -resize 1024x assets/poster-md.webp
+          convert "$NEW_POSTER" -strip -quality 90 -resize 1440x assets/poster-lg.webp
+          convert "$NEW_POSTER" -strip -quality 90 -resize 1920x assets/poster-xl.webp
 
       - name: Push Changes
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "chore: update responsive images [skip ci]"
-          file_pattern: "poster*.webp"
+          file_pattern: "poster*. assets/poster*.webp "
