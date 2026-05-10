@@ -1,0 +1,73 @@
+<style>
+  .section-fw-section-image-with-text-{{section.id}}-padding {
+    padding-top: 29px;
+    padding-bottom: 36px;
+  }
+
+  @media screen and (min-width: 640px) {
+    .section-fw-section-image-with-text-{{section.id}}-padding {
+      padding-top: 39px;
+      padding-bottom: 48px;
+    }
+  }
+</style>
+
+<script>
+  (async () => {
+    const url = 'https://raw.githubusercontent.com/foki-dev/fourthwall-image-testing/refs/heads/main/description.json';
+    const map = await fetch(url).then((r) => r.json());
+
+    const section = document.querySelector('.section--{{ section.id }}');
+    const headingEl = section.querySelector('#map__heading');
+    const pronounciationEl = section.querySelector('#map__pronounciation');
+    const translationEl = section.querySelector('#map__translation');
+
+    headingEl.innerText = map.theme;
+    pronounciationEl.innerText = map.pronounciation;
+    translationEl.innerHTML = map.translation.join('<br />');
+  })();
+</script>
+
+<section class="image-with-text section-fw-section-image-with-text-{{section.id}}-padding section--{{ section.id }}">
+  <div class="container wrapper">
+    <div class="grid grid--middle">
+      <div class="grid__column grid__column--12 grid__column--6@md">
+        <div class="image-with-text__image-container">
+          <img
+            class="image-with-text__image"
+            src="{{ "https://raw.githubusercontent.com/foki-dev/fourthwall-image-testing/refs/heads/main/assets/poster.webp" | img_url: 'desktop' }}"
+            srcset="
+              {{ "https://raw.githubusercontent.com/foki-dev/fourthwall-image-testing/refs/heads/main/assets/poster.webp" | img_url: 'large' }} 375w,
+              {{ "https://raw.githubusercontent.com/foki-dev/fourthwall-image-testing/refs/heads/main/assets/poster.webp" | img_url: 'display' }} 768w,
+              {{ "https://raw.githubusercontent.com/foki-dev/fourthwall-image-testing/refs/heads/main/assets/poster.webp" | img_url: 'jumbo' }} 1024w,
+              {{ "https://raw.githubusercontent.com/foki-dev/fourthwall-image-testing/refs/heads/main/assets/poster.webp" | img_url: 'master' }} 1440w,
+              {{ "https://raw.githubusercontent.com/foki-dev/fourthwall-image-testing/refs/heads/main/assets/poster.webp" | img_url: 'desktop' }} 1920w
+            "
+            sizes="(max-width: 767px) 100vw, 50vw"
+            alt="Monthy Art Programme"
+            loading="lazy"
+          >
+        </div>
+      </div>
+
+      {% comment %} TODO: JS part with MAP description {% endcomment %}
+      <div class="grid__column grid__column--12 grid__column--6@md">
+        <div class="image-with-text__content">
+          <h2
+            class="image-with-text__heading image-with-text__heading--center"
+            id="map__heading"
+          ></h2>
+
+          <div class="image-with-text__text image-with-text__text--center">
+            <div class="html-formatter">
+              <p><span></span><br></p>
+              <p><span id="map__pronounciation"></span></p>
+              <p><span></span><br></p>
+              <p id="map__translation"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
