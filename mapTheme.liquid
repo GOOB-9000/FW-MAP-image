@@ -12,22 +12,6 @@
   }
 </style>
 
-<script>
-  (async () => {
-    const url = 'https://raw.githubusercontent.com/foki-dev/fourthwall-image-testing/refs/heads/main/description.json';
-    const map = await fetch(url).then((r) => r.json());
-
-    const section = document.querySelector('.section--{{ section.id }}');
-    const headingEl = section.querySelector('#map__heading');
-    const pronounciationEl = section.querySelector('#map__pronounciation');
-    const translationEl = section.querySelector('#map__translation');
-
-    headingEl.innerText = map.theme;
-    pronounciationEl.innerText = map.pronounciation;
-    translationEl.innerHTML = map.translation.join('<br />');
-  })();
-</script>
-
 <section class="image-with-text section-fw-section-image-with-text-{{section.id}}-padding section--{{ section.id }}">
   <div class="container wrapper">
     <div class="grid grid--middle">
@@ -69,4 +53,23 @@
       </div>
     </div>
   </div>
+
+  <script>
+    (async () => {
+      const url =
+        'https://raw.githubusercontent.com/foki-dev/fourthwall-image-testing/refs/heads/main/description.json';
+      const map = await fetch(url).then((r) => r.json());
+
+      const section = document.querySelector('.section--{{ section.id }}');
+      const headingEl = section.querySelector('#map__heading');
+      const pronounciationEl = section.querySelector('#map__pronounciation');
+      const translationEl = section.querySelector('#map__translation');
+
+      headingEl.innerText = map.theme;
+      pronounciationEl.innerText = map.pronounciation;
+      // adds line break elements to after each meaning, but not the last one
+      const translations = map.translation.flatMap((m) => [m, document.createElement('br')]).slice(0, -1);
+      translationEl.append(...translations);
+    })();
+  </script>
 </section>
