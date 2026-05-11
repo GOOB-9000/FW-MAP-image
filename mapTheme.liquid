@@ -26,7 +26,7 @@
     readingEl.innerText = map.reading;
     // adds line break elements to after each meaning, but not the last one
     const meanings = map.meanings.flatMap((m) => [m, document.createElement('br')]).slice(0, -1);
-    meaningEl.append([...meanings]);
+    meaningEl.append(...meanings);
   })();
 </script>
 
