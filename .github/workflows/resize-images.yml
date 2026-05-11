@@ -1,0 +1,52 @@
+name: Resize Poster Image
+
+on:
+  push:
+    paths:
+      - "assets/poster.*" # matches any kind of image
+
+jobs:
+  resize-and-optimize:
+    permissions:
+      contents: write # allows commiting files from workflow
+    runs-on: ubuntu-latest
+
+    # do not run when workflow commits files
+    if: github.actor != 'github-actions[bot]'
+    steps:
+      - name: Install ImageMagick
+        run: sudo apt-get update && sudo apt-get install -y imagemagick
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Generate Variants
+        run: |
+
+          # get new poster file
+          NEW_POSTER_PATH=$(ls -t assets/poster.* | head -1)
+          NEW_POSTER=$(basename "$NEW_POSTER_PATH")
+
+          # remove old poster file if new has different extension
+          # for example, previously we had poster.jpg and now we have poster.png
+          find assets/ -maxdepth 1 -name "poster.*" ! -name "$NEW_POSTER" -delete
+
+
+          # clear and re-create assets dir
+          mkdir -p assets
+          rm -f assets/poster-*.webp
+
+          # Create WebP versions for faster loading using imagemagick
+          # and store them in the assets dir
+          convert "$NEW_POSTER_PATH" -strip -quality 100 assets/poster.webp
+          convert "$NEW_POSTER_PATH" -strip -quality 100 -resize 480x assets/poster-large.webp
+          convert "$NEW_POSTER_PATH" -strip -quality 100 -resize 720x assets/poster-display.webp
+          convert "$NEW_POSTER_PATH" -strip -quality 100 -resize 1024x assets/poster-jumbo.webp
+          convert "$NEW_POSTER_PATH" -strip -quality 100 -resize 1440x assets/poster-master.webp
+          convert "$NEW_POSTER_PATH" -strip -quality 100 -resize 1920x assets/poster-desktop.webp
+
+      - name: Push Changes
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: "chore: update responsive images [skip ci]"
+          file_pattern: "assets/poster*"
