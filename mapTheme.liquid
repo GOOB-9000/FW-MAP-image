@@ -19,12 +19,14 @@
 
     const section = document.querySelector('.section--{{ section.id }}');
     const headingEl = section.querySelector('#map__heading');
-    const pronounciationEl = section.querySelector('#map__pronounciation');
-    const translationEl = section.querySelector('#map__translation');
+    const readingEl = section.querySelector('#map__reading');
+    const meaningEl = section.querySelector('#map__meaning');
 
-    headingEl.innerText = map.theme;
-    pronounciationEl.innerText = map.pronounciation;
-    translationEl.innerHTML = map.translation.join('<br />');
+    headingEl.innerText = map.term;
+    readingEl.innerText = map.reading;
+    // adds line break elements to after each meaning, but not the last one
+    const meanings = map.meanings.flatMap((m) => [m, document.createElement('br')]).slice(0, -1);
+    meaningEl.append([...meanings]);
   })();
 </script>
 
@@ -60,9 +62,9 @@
           <div class="image-with-text__text image-with-text__text--center">
             <div class="html-formatter">
               <p><span></span><br></p>
-              <p><span id="map__pronounciation"></span></p>
+              <p><span id="map__reading"></span></p>
               <p><span></span><br></p>
-              <p id="map__translation"></p>
+              <p id="map__meaning"></p>
             </div>
           </div>
         </div>
